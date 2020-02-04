@@ -1,3 +1,6 @@
+#Libraries
+library(ggplot2)
+
 #Loading in the Dataset 
 folder <- "C:/Users/User/Documents/Honours-Project/Air Quality/"
 file_list <- list.files(path = folder, pattern = "*.csv")
@@ -37,6 +40,14 @@ colSums(is.na(Wanliu_Station.csv))
 colSums(is.na(Wanshouxigong_Station.csv))
 
 #Simple Visualisation of current trend 
+ggplot(Aotizhongxin_Station.csv, aes(x=month)) + geom_histogram(binwidth = 1)
 
+barplot(table(Aotizhongxin_Station.csv$month))
+
+boxplot(Aotizhongxin_Station.csv$PM10)
+
+qplot(Aotizhongxin_Station.csv$day, geom = "histogram")
+
+ggplot(Aotizhongxin_Station.csv, aes(x=PM2.5)) + geom_histogram()+theme_bw()
 
  
