@@ -1,6 +1,8 @@
 #Libraries
 library(ggplot2)
 library(lubridate)
+library(dplyr)
+library(magrittr)
 
 #Loading in the Dataset 
 folder <- "C:/Users/User/Documents/Honours-Project/Air Quality/"
@@ -48,9 +50,6 @@ paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_
 Aotizhongxin_Station.csv$date <- ymd( paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-"))
 head(Aotizhongxin_Station.csv)
 
-Aotizhongxin_Station.csv %>%
-   group_by
-
 #Simple Visualisation of current trend 
 ggplot(Aotizhongxin_Station.csv, aes(x=month)) + geom_histogram(binwidth = 1)
 
@@ -69,12 +68,22 @@ ggplot (Aotizhongxin_Station.csv, aes(x=year, y=PM2.5)) +
    geom_boxplot(alpha=0.7) +
    stat_summary(fun.y = mean,geom="point",shape=10,size=8,color="red")
 
-ggplot (Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
+ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
    geom_point()
 
 ggplot (Aotizhongxin_Station.csv,aes(x=date,y=PM2.5)) +
    geom_point() +
    facet_wrap(~ year)
+
+
+Aotizhongxin_month_PM2.5 <- Aotizhongxin_Station.csv %>%
+   group_by (year,month) %>%
+   summarise(max_PM2.5 = sum(PM2.5))
+
+Aotizhongxin_month_PM2.5 %>%
+   ggplot (aes(x = month, y = max_PM2.5)) +
+      geom_bar(stat = "identity") +
+   facet_wrap(~ year, ncol = 3)
    
 
  
