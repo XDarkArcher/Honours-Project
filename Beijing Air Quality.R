@@ -1,5 +1,6 @@
 #Libraries
 library(ggplot2)
+library(lubridate)
 
 #Loading in the Dataset 
 folder <- "C:/Users/User/Documents/Honours-Project/Air Quality/"
@@ -25,6 +26,9 @@ Aotizhongxin_Station.csv[0:9,]
 #Summary of the Aotizhongxin monotoring station 
 summary(Aotizhongxin_Station.csv)
 
+#Structure of the data of on of the Stations
+str(Aotizhongxin_Station.csv)
+
 #Counts all the missing values for each Column
 colSums(is.na(Aotizhongxin_Station.csv))
 colSums(is.na(Changping_Station.csv))
@@ -39,6 +43,14 @@ colSums(is.na(Tiantan_Station.csv))
 colSums(is.na(Wanliu_Station.csv))
 colSums(is.na(Wanshouxigong_Station.csv))
 
+#Merging the sperate date elements as one date column 
+paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-")
+Aotizhongxin_Station.csv$date <- ymd( paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-"))
+head(Aotizhongxin_Station.csv)
+
+Aotizhongxin_Station.csv %>%
+   group_by
+
 #Simple Visualisation of current trend 
 ggplot(Aotizhongxin_Station.csv, aes(x=month)) + geom_histogram(binwidth = 1)
 
@@ -48,6 +60,21 @@ boxplot(Aotizhongxin_Station.csv$PM10)
 
 qplot(Aotizhongxin_Station.csv$day, geom = "histogram")
 
-ggplot(Aotizhongxin_Station.csv, aes(x=PM2.5)) + geom_histogram()+theme_bw()
+ggplot(Aotizhongxin_Station.csv, aes(x=TEMP)) + geom_histogram()+theme_bw()
+
+ggplot (Aotizhongxin_Station.csv, aes(x=year, y=PM2.5)) +
+   geom_line()
+
+ggplot (Aotizhongxin_Station.csv, aes(x=year, y=PM2.5)) +
+   geom_boxplot(alpha=0.7) +
+   stat_summary(fun.y = mean,geom="point",shape=10,size=8,color="red")
+
+ggplot (Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
+   geom_point()
+
+ggplot (Aotizhongxin_Station.csv,aes(x=date,y=PM2.5)) +
+   geom_point() +
+   facet_wrap(~ year)
+   
 
  
