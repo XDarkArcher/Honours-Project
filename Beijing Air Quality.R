@@ -84,6 +84,13 @@ Aotizhongxin_month_PM2.5 %>%
    ggplot (aes(x = month, y = max_PM2.5)) +
       geom_bar(stat = "identity") +
    facet_wrap(~ year, ncol = 3)
-   
 
+#Creating copies of the dataset
+Aotizhongxin_Station.csv_Copy
+   
+#Cleaning the Data using the average 
+Aotizhongxin_Station.csv$PM2.5[is.na(Aotizhongxin_Station.csv$PM2.5)] <- mean(Aotizhongxin_Station.csv$PM2.5, na.rm = TRUE)
+summary(Aotizhongxin_Station.csv)
+
+#Split the dataset into training and testing sets
  
