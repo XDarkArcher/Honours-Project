@@ -3,6 +3,7 @@ library(ggplot2)
 library(lubridate)
 library(dplyr)
 library(magrittr)
+library(forecast)
 
 #Loading in the Dataset 
 folder <- "C:/Users/User/Documents/Honours-Project/Air Quality/"
@@ -50,7 +51,9 @@ paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_
 Aotizhongxin_Station.csv$date <- ymd( paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-"))
 head(Aotizhongxin_Station.csv)
 
-#Simple Visualisation of current trend 
+#Simple Visualisation of current trend
+
+#Plot Attempts that did not look right
 ggplot(Aotizhongxin_Station.csv, aes(x=month)) + geom_histogram(binwidth = 1)
 
 barplot(table(Aotizhongxin_Station.csv$month))
@@ -66,13 +69,10 @@ ggplot (Aotizhongxin_Station.csv, aes(x=year, y=PM2.5)) +
 
 ggplot (Aotizhongxin_Station.csv, aes(x=year, y=PM2.5)) +
    geom_boxplot(alpha=0.7) +
-   stat_summary(fun.y = mean,geom="point",shape=10,size=8,color="red")
-
-ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
-   geom_point()
+   stat_summary(fun.y = mean,geom="point", size=0.5,color="red")
 
 ggplot (Aotizhongxin_Station.csv,aes(x=date,y=PM2.5)) +
-   geom_point() +
+   geom_point(size=0.5) +
    facet_wrap(~ year)
 
 
@@ -80,17 +80,27 @@ Aotizhongxin_month_PM2.5 <- Aotizhongxin_Station.csv %>%
    group_by (year,month) %>%
    summarise(max_PM2.5 = sum(PM2.5))
 
-Aotizhongxin_month_PM2.5 %>%
-   ggplot (aes(x = month, y = max_PM2.5)) +
-      geom_bar(stat = "identity") +
-   facet_wrap(~ year, ncol = 3)
+#Successful plot attempt
+ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
+   geom_point(size = 0.1)
 
-#Creating copies of the dataset
-Aotizhongxin_Station.csv_Copy
-   
+ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
+   geom_line(size = 0.1)
+
+#Creating copy of the dataframe 
+AotizhongxinCopy <- Aotizhongxin_Station.csv 
+
 #Cleaning the Data using the average 
-Aotizhongxin_Station.csv$PM2.5[is.na(Aotizhongxin_Station.csv$PM2.5)] <- mean(Aotizhongxin_Station.csv$PM2.5, na.rm = TRUE)
-summary(Aotizhongxin_Station.csv)
+AotizhongxinCopy$PM2.5[is.na(AotizhongxinCopy$PM2.5)] <- mean(AotizhongxinCopy$PM2.5, na.rm = TRUE)
+summary(AotizhongxinCopy)
 
-#Split the dataset into training and testing sets
+#Plot After cleaning
+ggplot (data = AotizhongxinCopy,aes(x=date,y=PM2.5))+
+   geom_point(size = 0.1)
+
+#Creation of Time Series Object and plotting using seasonal frequency 
+Aot_PM2.5_TS <- msts(AotizhongxinCopy$PM2.5, seasonal.periods = c(24,7*24, 365*24), start=c(2013,3,1), end=c(2017,2,28))
+plot.ts(Aot_PM2.5_TS)
+Aot_PM2.5_Sub = window(Aot_PM2.5_TS, start=c(2013,3), end=c(2017,2))
+plot(Aot_PM2.5_Sub)
  
