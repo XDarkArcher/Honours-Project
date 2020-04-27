@@ -120,6 +120,8 @@ corrplot(Aotizhongxin.Correlation)
 ggplot (data = Aotizhongxin.Copy,aes(x=date,y=PM2.5))+
    geom_point(size = 0.1)
 
+ggplot(Aotizhongxin.Copy,aes(date,PM2.5)) + geom_point() + facet_wrap( ~ month) + ylab("Daily PM2.5 Levels for Aotizhongxin Satation") 
+
 #Creation of Time Series Object and plotting using seasonal frequency 
 
 #Hourly Daily Seaonal Period of Aotizhongxin variables 
