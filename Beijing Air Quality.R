@@ -19,61 +19,61 @@ file.list <- list.files(path = folder, pattern = "*.csv")
 #Simple Data Exploration 
 
 #Get the number of Rows and Columns
-nrow(Aotizhongxin.Station.csv)
-ncol(Aotizhongxin.Station.csv)
+nrow(Aotizhongxin_Station.csv)
+ncol(Aotizhongxin_Station.csv)
 
 #Get the column names  
-names(Aotizhongxin.Station.csv)
+names(Aotizhongxin_Station.csv)
  
 #Show the first 10 rows in the dataframe
-Aotizhongxin.Station.csv[0:9,]
+Aotizhongxin_Station.csv[0:9,]
 
 #Summary of the Aotizhongxin monotoring station 
-summary(Aotizhongxin.Station.csv)
+summary(Aotizhongxin_Station.csv)
 
 #Structure of the data of on of the Stations
-str(Aotizhongxin.Station.csv)
+str(Aotizhongxin_Station.csv)
 
 #Counts all the missing values for each Column
-colSums(is.na(Aotizhongxin.Station.csv))
-colSums(is.na(Changping.Station.csv))
+colSums(is.na(Aotizhongxin_Station.csv))
+colSums(is.na(Changping_Station.csv))
 colSums(is.na(Dingling.Station.csv))
-colSums(is.na(Dongsi.Station.csv))
-colSums(is.na(Guanyuan.Station.csv))
-colSums(is.na(Gucheng.Station.csv))
-colSums(is.na(Huairou.Station.csv))
-colSums(is.na(Nongzhanguan.Station.csv))
-colSums(is.na(Shunyi.Station.csv))
-colSums(is.na(Tiantan.Station.csv))
-colSums(is.na(Wanliu.Station.csv))
-colSums(is.na(Wanshouxigong.Station.csv))
+colSums(is.na(Dongsi_Station.csv))
+colSums(is.na(Guanyuan_Station.csv))
+colSums(is.na(Gucheng_Station.csv))
+colSums(is.na(Huairou_Station.csv))
+colSums(is.na(Nongzhanguan_Station.csv))
+colSums(is.na(Shunyi_Station.csv))
+colSums(is.na(Tiantan_Station.csv))
+colSums(is.na(Wanliu_Station.csv))
+colSums(is.na(Wanshouxigong_Station.csv))
 
 #Merging the sperate date elements as one date column 
-paste(Aotizhongxin.Station.csv$year,Aotizhongxin.Station.csv$month,Aotizhongxin.Station.csv$day, sep = "-")
-Aotizhongxin.Station.csv$date <- ymd( paste(Aotizhongxin.Station.csv$year,Aotizhongxin.Station.csv$month,Aotizhongxin.Station.csv$day, sep = "-"))
-head(Aotizhongxin.Station.csv)
+paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-")
+Aotizhongxin_Station.csv$date <- ymd( paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-"))
+head(Aotizhongxin_Station.csv)
 
 #Simple Visualisation of current trend
 
 #Plot Attempts that did not look right
-ggplot(Aotizhongxin.Station.csv, aes(x=month)) + geom_histogram(binwidth = 1)
+ggplot(Aotizhongxin_Station.csv, aes(x=month)) + geom_histogram(binwidth = 1)
 
-barplot(table(Aotizhongxin.Station.csv$month))
+barplot(table(Aotizhongxin_Station.csv$month))
 
-boxplot(Aotizhongxin.Station.csv$PM10)
+boxplot(Aotizhongxin_Station.csv$PM10)
 
-qplot(Aotizhongxin.Station.csv$day, geom = "histogram")
+qplot(Aotizhongxin_Station.csv$day, geom = "histogram")
 
-ggplot(Aotizhongxin.Station.csv, aes(x=TEMP)) + geom_histogram()+theme.bw()
+ggplot(Aotizhongxin_Station.csv, aes(x=TEMP)) + geom_histogram()+theme.bw()
 
-ggplot (Aotizhongxin.Station.csv, aes(x=year, y=PM2.5)) +
+ggplot (Aotizhongxin_Station.csv, aes(x=year, y=PM2.5)) +
    geom_line()
 
-ggplot (Aotizhongxin.Station.csv, aes(x=year, y=PM2.5)) +
+ggplot (Aotizhongxin_Station.csv, aes(x=year, y=PM2.5)) +
    geom_boxplot(alpha=0.7) +
    stat.summary(fun.y = mean,geom="point", size=0.5,color="red")
 
-ggplot (Aotizhongxin.Station.csv,aes(x=date,y=PM2.5)) +
+ggplot (Aotizhongxin_Station,aes(x=date,y=PM2.5)) +
    geom_point(size=0.5) +
    facet.wrap(~ year)
 
@@ -83,14 +83,14 @@ Aotizhongxin.month.PM2.5 <- Aotizhongxin.Station.csv %>%
    summarise(max.PM2.5 = sum(PM2.5))
 
 #Successful plot attempt
-ggplot (data = Aotizhongxin.Station.csv,aes(x=date,y=PM2.5))+
+ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
    geom_point(size = 0.1)
 
-ggplot (data = Aotizhongxin.Station.csv,aes(x=date,y=PM10))+
+ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM10))+
    geom_point(size = 0.1)
 
 #Creating copy of the dataframe 
-Aotizhongxin.Copy <- Aotizhongxin.Station.csv 
+Aotizhongxin.Copy <- Aotizhongxin_Station.csv 
 
 #Cleaning the Data using the average 
 Aotizhongxin.Copy$PM2.5[is.na(Aotizhongxin.Copy$PM2.5)] <- mean(Aotizhongxin.Copy$PM2.5, na.rm = TRUE)
@@ -127,6 +127,7 @@ ggplot(Aotizhongxin.Copy,aes(date,PM2.5)) + geom_point() + facet_wrap( ~ month) 
 #Hourly Daily Seaonal Period of Aotizhongxin variables 
 Aotizhongxin.PM2.5.ts <- ts(Aotizhongxin.Copy$PM2.5, frequency = 8766, start=c(2013,3,1), end=c(2017,2,28))
 plot.ts(Aotizhongxin.PM2.5.ts)
+tsdisplay(Aotizhongxin.PM2.5.ts, lag.max = 100)
 
 Aotizhongxin.PM10.ts <- ts(Aotizhongxin.Copy$PM10, frequency = 8766, start=c(2013,3,1), end=c(2017,2,28))
 plot.ts(Aotizhongxin.PM10.TS)
@@ -134,12 +135,14 @@ plot.ts(Aotizhongxin.PM10.TS)
 #52 Week Seaonal Period of Aotizhongxin 2.5 particulate 
 Aotizhongxin.weekly.PM2.5.ts <- ts(Aotizhongxin.Copy$PM2.5,frequency = 52,start = c(2013,3,1), end=c(2017,2,28))
 plot(Aotizhongxin.weekly.PM2.5.ts,main="Aotizhongxin Monitoring Station Weekly PM2.5",ylab="Weekly PM2.5 levels")
+tsdisplay(Aotizhongxin.weekly.PM2.5.ts, lag.max = 100)
 
 #Decomposing the time series
 #24Hours Daily 
 Aotizhongxin.PM2.5.Decomp = stl(Aotizhongxin.PM2.5.ts, s.window = "periodic")
 Aotizhongxin.PM2.5.Deseasonal <- seasadj(Aotizhongxin.PM2.5.Decomp)
 plot(Aotizhongxin.PM2.5.Decomp)
+
 #52 Week Period
 Aotizhongxin.weekly.PM2.5.Decomp = stl(Aotizhongxin.weekly.PM2.5.ts, s.window = "periodic")
 Aotizhongxin.weekly.PM2.5.Deseasonal <- seasadj(Aotizhongxin.weekly.PM2.5.Decomp)
@@ -171,6 +174,10 @@ tsdisplay(residuals(Aotizhongxin.PM2.5.fit2),lag.max = 20,main = 'Aotizhongxin D
 Aotizhongxin.weekly.PM2.5.fit <- auto.arima(Aotizhongxin.weekly.PM2.5.Deseasonal)
 Aotizhongxin.weekly.PM2.5.fit
 tsdisplay(residuals(Aotizhongxin.weekly.PM2.5.fit),main="52 Week Period PM2.5 autoarima model residuals for Aotizhongxin")
+plot(Aotizhongxin.weekly.PM2.5.fit$residuals)
+acf(Aotizhongxin.weekly.PM2.5.fit$residuals)
+pacf(Aotizhongxin.weekly.PM2.5.fit$residuals)
+
 
 #Forecasting the fit of the model
 
@@ -209,6 +216,7 @@ acf(Aotizhongxin.weekly.PM2.5.forecast2$residuals)
 pacf(Aotizhongxin.weekly.PM2.5.forecast2$residuals)
 #Accuracy Check
 accuracy(Aotizhongxin.weekly.PM2.5.forecast2)
+
 
 
 
