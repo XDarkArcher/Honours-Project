@@ -7,7 +7,8 @@ library(forecast)
 library(corrplot)
 library(Hmisc)
 
-#Loading in the Dataset 
+#Obtaining the data step
+#Loading in the Dataset
 folder <- "C:/Users/User/Documents/Honours-Project/Air Quality/"
 file.list <- list.files(path = folder, pattern = "*.csv")
 
@@ -16,6 +17,7 @@ file.list <- list.files(path = folder, pattern = "*.csv")
    read.csv(paste(folder, file.list[i], sep=''))
    )}
  
+#Exploration Step
 #Simple Data Exploration 
 
 #Get the number of Rows and Columns
@@ -24,12 +26,16 @@ ncol(Aotizhongxin_Station.csv)
 
 #Get the column names  
 names(Aotizhongxin_Station.csv)
+names(Changping_Station.csv)
  
 #Show the first 10 rows in the dataframe
 Aotizhongxin_Station.csv[0:9,]
+Changping_Station.csv[0:9,]
 
 #Summary of the Aotizhongxin monotoring station 
 summary(Aotizhongxin_Station.csv)
+summary(Changping_Station.csv)
+
 
 #Structure of the data of on of the Stations
 str(Aotizhongxin_Station.csv)
@@ -47,11 +53,6 @@ colSums(is.na(Shunyi_Station.csv))
 colSums(is.na(Tiantan_Station.csv))
 colSums(is.na(Wanliu_Station.csv))
 colSums(is.na(Wanshouxigong_Station.csv))
-
-#Merging the sperate date elements as one date column 
-paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-")
-Aotizhongxin_Station.csv$date <- ymd( paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-"))
-head(Aotizhongxin_Station.csv)
 
 #Simple Visualisation of current trend
 
@@ -89,6 +90,7 @@ ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
 ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM10))+
    geom_point(size = 0.1)
 
+#Cleaning Step
 #Creating copy of the dataframe 
 Aotizhongxin.Copy <- Aotizhongxin_Station.csv 
 
@@ -107,6 +109,12 @@ Aotizhongxin.Copy$WSPM [is.na(Aotizhongxin.Copy$WSPM)]  <- mean(Aotizhongxin.Cop
 summary(Aotizhongxin.Copy)
 str(Aotizhongxin.Copy)
 
+#Merging the sperate date elements as one date column 
+paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-")
+Aotizhongxin_Station.csv$date <- ymd( paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-"))
+head(Aotizhongxin_Station.csv)
+
+#Some More Exploration after cleaning 
 #Finding any correlation between variables in the columns
 Aotizhongxin.Copy.cor <- Aotizhongxin.Copy[-c(1:5,16,18:19)]
 Aotizhongxin.Correlation = cor(Aotizhongxin.Copy.cor)
@@ -122,6 +130,7 @@ ggplot (data = Aotizhongxin.Copy,aes(x=date,y=PM2.5))+
 
 ggplot(Aotizhongxin.Copy,aes(date,PM2.5)) + geom_point() + facet_wrap( ~ month) + ylab("Daily PM2.5 Levels for Aotizhongxin Satation") 
 
+#Modelling the data step
 #Creation of Time Series Object and plotting using seasonal frequency 
 
 #Hourly Daily Seaonal Period of Aotizhongxin variables 
