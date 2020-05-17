@@ -36,14 +36,13 @@ Changping_Station.csv[0:9,]
 summary(Aotizhongxin_Station.csv)
 summary(Changping_Station.csv)
 
-
 #Structure of the data of on of the Stations
 str(Aotizhongxin_Station.csv)
 
 #Counts all the missing values for each Column
 colSums(is.na(Aotizhongxin_Station.csv))
 colSums(is.na(Changping_Station.csv))
-colSums(is.na(Dingling.Station.csv))
+colSums(is.na(Dingling_Station.csv))
 colSums(is.na(Dongsi_Station.csv))
 colSums(is.na(Guanyuan_Station.csv))
 colSums(is.na(Gucheng_Station.csv))
@@ -57,7 +56,6 @@ colSums(is.na(Wanshouxigong_Station.csv))
 #Simple Visualisation of current trend
 
 #Plot Attempts that did not look right
-ggplot(Aotizhongxin_Station.csv, aes(x=month)) + geom_histogram(binwidth = 1)
 
 barplot(table(Aotizhongxin_Station.csv$month))
 
@@ -74,9 +72,9 @@ ggplot (Aotizhongxin_Station.csv, aes(x=year, y=PM2.5)) +
    geom_boxplot(alpha=0.7) +
    stat.summary(fun.y = mean,geom="point", size=0.5,color="red")
 
-ggplot (Aotizhongxin_Station,aes(x=date,y=PM2.5)) +
+ggplot (Aotizhongxin_Station.csv,aes(x=date,y=PM2.5)) +
    geom_point(size=0.5) +
-   facet.wrap(~ year)
+   facet_wrap(~ year)
 
 
 Aotizhongxin.month.PM2.5 <- Aotizhongxin.Station.csv %>%
@@ -84,6 +82,13 @@ Aotizhongxin.month.PM2.5 <- Aotizhongxin.Station.csv %>%
    summarise(max.PM2.5 = sum(PM2.5))
 
 #Successful plot attempt
+
+ggplot(Aotizhongxin_Station.csv, aes(x=month)) + geom_bar()
+
+ggplot(Aotizhongxin_Station.csv, aes(x=month)) + geom_bar() +
+   facet_wrap(~ year)
+
+#Need to Merge the dates which is done after cleaning the data
 ggplot (data = Aotizhongxin_Station.csv,aes(x=date,y=PM2.5))+
    geom_point(size = 0.1)
 
@@ -107,14 +112,18 @@ Aotizhongxin.Copy$DEWP [is.na(Aotizhongxin.Copy$DEWP)]  <- mean(Aotizhongxin.Cop
 Aotizhongxin.Copy$RAIN [is.na(Aotizhongxin.Copy$RAIN)]  <- mean(Aotizhongxin.Copy$RAIN, na.rm = TRUE)
 Aotizhongxin.Copy$WSPM [is.na(Aotizhongxin.Copy$WSPM)]  <- mean(Aotizhongxin.Copy$WSPM, na.rm = TRUE)
 summary(Aotizhongxin.Copy)
+colSums(is.na(Aotizhongxin.Copy))
 str(Aotizhongxin.Copy)
 
 #Merging the sperate date elements as one date column 
-paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-")
-Aotizhongxin_Station.csv$date <- ymd( paste(Aotizhongxin_Station.csv$year,Aotizhongxin_Station.csv$month,Aotizhongxin_Station.csv$day, sep = "-"))
-head(Aotizhongxin_Station.csv)
+paste(Aotizhongxin.Copy$year,Aotizhongxin.Copy$month,Aotizhongxin.Copy$day, sep = "-")
+Aotizhongxin.Copy$date <- ymd( paste(Aotizhongxin.Copy$year,Aotizhongxin.Copy$month,Aotizhongxin.Copy$day, sep = "-"))
+head(Aotizhongxin.Copy)
 
 #Some More Exploration after cleaning 
+#Summary after cleaning 
+summary(Aotizhongxin.Copy)
+
 #Finding any correlation between variables in the columns
 Aotizhongxin.Copy.cor <- Aotizhongxin.Copy[-c(1:5,16,18:19)]
 Aotizhongxin.Correlation = cor(Aotizhongxin.Copy.cor)
@@ -168,6 +177,10 @@ summary(Aotizhongxin.PM2.5.autoarima)
 Aotizhongxin.weekly.PM2.5.autoarima <- auto.arima(Aotizhongxin.weekly.PM2.5.ts)
 Aotizhongxin.weekly.PM2.5.autoarima
 tsdisplay(residuals(Aotizhongxin.weekly.PM2.5.autoarima),main="52 Week Period PM2.5 autoarima model residuals for Aotizhongxin")
+accuracy(Aotizhongxin.weekly.PM2.5.autoarima)
+
+#Model Residuals
+checkresiduals(Aotizhongxin.weekly.PM2.5.autoarima)
 
 #Using decomposed data with auto arima function to see if there is any diiferences with or without decomposing
 
@@ -183,6 +196,12 @@ tsdisplay(residuals(Aotizhongxin.PM2.5.fit2),lag.max = 20,main = 'Aotizhongxin D
 Aotizhongxin.weekly.PM2.5.fit <- auto.arima(Aotizhongxin.weekly.PM2.5.Deseasonal)
 Aotizhongxin.weekly.PM2.5.fit
 tsdisplay(residuals(Aotizhongxin.weekly.PM2.5.fit),main="52 Week Period PM2.5 autoarima model residuals for Aotizhongxin")
+
+accuracy(Aotizhongxin.weekly.PM2.5.fit)
+
+#Model Residuals
+checkresiduals(Aotizhongxin.weekly.PM2.5.fit)
+
 plot(Aotizhongxin.weekly.PM2.5.fit$residuals)
 acf(Aotizhongxin.weekly.PM2.5.fit$residuals)
 pacf(Aotizhongxin.weekly.PM2.5.fit$residuals)
@@ -203,9 +222,9 @@ plot(Aotizhongxin.PM2.5.forecast$residuals)
 acf(Aotizhongxin.PM2.5.forecast$residuals)
 pacf(Aotizhongxin.PM2.5.forecast$residuals)
 
-#Forecasting the 52 week period model for the next 3 months
+#Forecasting the 52 week period model for the next year
 #without decomposing
-Aotizhongxin.weekly.PM2.5.forecast <- forecast(Aotizhongxin.weekly.PM2.5.autoarima, h=12)
+Aotizhongxin.weekly.PM2.5.forecast <- forecast(Aotizhongxin.weekly.PM2.5.autoarima, h=52)
 plot(Aotizhongxin.weekly.PM2.5.forecast,main="52 Week Period forecast using ARIMA(2,1,3) for Aotizhongxin",sub="Without Decomposing",xlab="Time",ylab="Weekly PM2.5")
 Aotizhongxin.weekly.PM2.5.forecast
 #Residuals
@@ -215,10 +234,13 @@ pacf(Aotizhongxin.weekly.PM2.5.forecast$residuals)
 #Accuracy Check
 accuracy(Aotizhongxin.weekly.PM2.5.forecast)
 
+autoplot(forecast(Aotizhongxin.weekly.PM2.5.autoarima))
+
 #With Decomposing
-Aotizhongxin.weekly.PM2.5.forecast2 <- forecast(Aotizhongxin.weekly.PM2.5.fit, h=12)
+Aotizhongxin.weekly.PM2.5.forecast2 <- forecast(Aotizhongxin.weekly.PM2.5.fit, h=52)
 plot(Aotizhongxin.weekly.PM2.5.forecast2,main="52 Week Period forecast using ARIMA(2,1,3) for Aotizhongxin",sub="With Decomposing",xlab="Time",ylab="Weekly PM2.5")
 Aotizhongxin.weekly.PM2.5.forecast2
+
 #Residuals
 plot(Aotizhongxin.weekly.PM2.5.forecast2$residuals,main="Forecast Residuals",ylab="52 Week Period Residuals")
 acf(Aotizhongxin.weekly.PM2.5.forecast2$residuals)
@@ -226,7 +248,7 @@ pacf(Aotizhongxin.weekly.PM2.5.forecast2$residuals)
 #Accuracy Check
 accuracy(Aotizhongxin.weekly.PM2.5.forecast2)
 
-
+autoplot(forecast(Aotizhongxin.weekly.PM2.5.fit))
 
 
 
