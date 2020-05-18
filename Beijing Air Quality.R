@@ -227,10 +227,20 @@ pacf(Aotizhongxin.PM2.5.forecast$residuals)
 Aotizhongxin.weekly.PM2.5.forecast <- forecast(Aotizhongxin.weekly.PM2.5.autoarima, h=52)
 plot(Aotizhongxin.weekly.PM2.5.forecast,main="52 Week Period forecast using ARIMA(2,1,3) for Aotizhongxin",sub="Without Decomposing",xlab="Time",ylab="Weekly PM2.5")
 Aotizhongxin.weekly.PM2.5.forecast
+
 #Residuals
 plot(Aotizhongxin.weekly.PM2.5.forecast$residuals, main="Forecast Residuals",ylab="52 Week Period Residuals")
 acf(Aotizhongxin.weekly.PM2.5.forecast$residuals)
 pacf(Aotizhongxin.weekly.PM2.5.forecast$residuals)
+
+Acf(Aotizhongxin.weekly.PM2.5.forecast$residuals)
+
+attach(Aotizhongxin.weekly.PM2.5.forecast)
+par(mfrow=c(3,1))
+plot(Aotizhongxin.weekly.PM2.5.forecast$residuals, main="Forecast Residuals",ylab="52 Week Period Residuals")
+Acf(Aotizhongxin.weekly.PM2.5.forecast$residuals, main="Forecast Autocorrelation Function")
+Pacf(Aotizhongxin.weekly.PM2.5.forecast$residuals, main="Forecast Partial Autocorrelation Function", sub="Without Decomposing")
+
 #Accuracy Check
 accuracy(Aotizhongxin.weekly.PM2.5.forecast)
 
@@ -245,6 +255,13 @@ Aotizhongxin.weekly.PM2.5.forecast2
 plot(Aotizhongxin.weekly.PM2.5.forecast2$residuals,main="Forecast Residuals",ylab="52 Week Period Residuals")
 acf(Aotizhongxin.weekly.PM2.5.forecast2$residuals)
 pacf(Aotizhongxin.weekly.PM2.5.forecast2$residuals)
+
+attach(Aotizhongxin.weekly.PM2.5.forecast2)
+par(mfrow=c(3,1))
+plot(Aotizhongxin.weekly.PM2.5.forecast2$residuals,main="Forecast Residuals",ylab="52 Week Period Residuals")
+Acf(Aotizhongxin.weekly.PM2.5.forecast2$residuals,main="Forecast Autocorrelation Function")
+Pacf(Aotizhongxin.weekly.PM2.5.forecast2$residuals,  main="Forecast Partial Autocorrelation Function", sub="With Decomposing")
+
 #Accuracy Check
 accuracy(Aotizhongxin.weekly.PM2.5.forecast2)
 
